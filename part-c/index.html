@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Student Lead Capture Form — Submit your academic details and preferred university information to our admissions team." />
+  <title>Student Lead Capture Form</title>
+
+  <!-- Google Font — Inter for a clean, modern university feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS RESET & CUSTOM PROPERTIES
+       ============================================================ */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      /* Palette from spec */
+      --clr-primary: #2563eb;
+      --clr-primary-hover: #1d4ed8;
+      --clr-secondary: #1e40af;
+      --clr-bg: #f8fafc;
+      --clr-success: #16a34a;
+      --clr-success-light: #dcfce7;
+      --clr-error: #dc2626;
+      --clr-error-light: #fef2f2;
+      --clr-card: #ffffff;
+      --clr-text: #1e293b;
+      --clr-text-muted: #64748b;
+      --clr-border: #cbd5e1;
+      --clr-border-focus: #2563eb;
+
+      /* Typography */
+      --ff-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --fs-base: 1rem;
+
+      /* Spacing (8-point grid) */
+      --sp-1: 4px;
+      --sp-2: 8px;
+      --sp-3: 12px;
+      --sp-4: 16px;
+      --sp-5: 24px;
+      --sp-6: 32px;
+      --sp-7: 48px;
+      --sp-8: 64px;
+
+      /* Radius */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      /* Shadows */
+      --shadow-card: 0 1px 3px rgba(0, 0, 0, .06), 0 8px 24px rgba(0, 0, 0, .06);
+      --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, .08), 0 16px 40px rgba(0, 0, 0, .08);
+      --shadow-input-focus: 0 0 0 3px rgba(37, 99, 235, .15);
+
+      /* Transitions */
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+      --dur: 0.25s;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--ff-body);
+      font-size: var(--fs-base);
+      color: var(--clr-text);
+      background: var(--clr-bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================================
+       HERO / HEADER SECTION
+       ============================================================ */
+    .hero {
+      background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-secondary) 100%);
+      color: #fff;
+      text-align: center;
+      padding: var(--sp-8) var(--sp-5) var(--sp-7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative circles for visual depth */
+    .hero::before,
+    .hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: .08;
+      background: #fff;
+    }
+
+    .hero::before {
+      width: 400px;
+      height: 400px;
+      top: -120px;
+      right: -80px;
+    }
+
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      bottom: -60px;
+      left: -40px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--sp-3);
+      position: relative;
+    }
+
+    .hero .subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 500;
+      opacity: .92;
+      margin-bottom: var(--sp-2);
+      position: relative;
+    }
+
+    .hero .description {
+      font-size: 0.925rem;
+      opacity: .78;
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ============================================================
+       FORM CARD CONTAINER
+       ============================================================ */
+    .form-wrapper {
+      max-width: 900px;
+      margin: -40px auto 0;
+      padding: 0 var(--sp-5) var(--sp-8);
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-card {
+      background: var(--clr-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: var(--sp-7);
+      transition: box-shadow var(--dur) var(--ease-out);
+      animation: slideUp .55s var(--ease-out) both;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================================
+       TWO-COLUMN GRID (desktop)
+       ============================================================ */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-5) var(--sp-6);
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ============================================================
+       FORM ELEMENTS
+       ============================================================ */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-1);
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--clr-text);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-1);
+    }
+
+    label .required-star {
+      color: var(--clr-error);
+      font-weight: 700;
+    }
+
+    /* ---------- Inputs & Textarea ---------- */
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: var(--sp-3) var(--sp-4);
+      font-family: var(--ff-body);
+      font-size: 0.9375rem;
+      color: var(--clr-text);
+      background: var(--clr-bg);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--dur) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out),
+        background var(--dur) var(--ease-out);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--clr-border-focus);
+      box-shadow: var(--shadow-input-focus);
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    /* ---------- Error state ---------- */
+    .form-group.has-error input,
+    .form-group.has-error select,
+    .form-group.has-error textarea {
+      border-color: var(--clr-error);
+      background: var(--clr-error-light);
+    }
+
+    .error-message {
+      font-size: 0.8rem;
+      color: var(--clr-error);
+      min-height: 1.15em;
+      transition: opacity var(--dur) var(--ease-out);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .error-message:empty {
+      opacity: 0;
+    }
+
+    /* ---------- Radio group ---------- */
+    .radio-group {
+      display: flex;
+      gap: var(--sp-4);
+      flex-wrap: wrap;
+      padding-top: var(--sp-1);
+    }
+
+    .radio-option {
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-option label.radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-2) var(--sp-4);
+      border: 1.5px solid var(--clr-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      background: var(--clr-bg);
+      transition: all var(--dur) var(--ease-out);
+      user-select: none;
+    }
+
+    .radio-option input[type="radio"]:focus-visible+label.radio-label {
+      box-shadow: var(--shadow-input-focus);
+    }
+
+    .radio-option input[type="radio"]:checked+label.radio-label {
+      border-color: var(--clr-primary);
+      background: rgba(37, 99, 235, .06);
+      color: var(--clr-primary);
+    }
+
+    .radio-option label.radio-label:hover {
+      border-color: var(--clr-primary);
+    }
+
+    /* Custom radio dot */
+    .radio-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--clr-border);
+      position: relative;
+      flex-shrink: 0;
+      transition: border-color var(--dur) var(--ease-out);
+    }
+
+    .radio-dot::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--clr-primary);
+      transform: scale(0);
+      transition: transform var(--dur) var(--ease-out);
+    }
+
+    .radio-option input[type="radio"]:checked+label .radio-dot {
+      border-color: var(--clr-primary);
+    }
+
+    .radio-option input[type="radio"]:checked+label .radio-dot::after {
+      transform: scale(1);
+    }
+
+    /* ---------- Character counter ---------- */
+    .char-counter {
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+      text-align: right;
+      transition: color var(--dur) var(--ease-out);
+    }
+
+    .char-counter.limit-reached {
+      color: var(--clr-error);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       SUBMIT BUTTON
+       ============================================================ */
+    .btn-submit {
+      grid-column: 1 / -1;
+      width: 100%;
+      padding: var(--sp-4) var(--sp-5);
+      font-family: var(--ff-body);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--clr-primary), var(--clr-secondary));
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--dur) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out),
+        opacity var(--dur) var(--ease-out);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, .35);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, .25);
+    }
+
+    .btn-submit:focus-visible {
+      outline: 3px solid var(--clr-primary);
+      outline-offset: 2px;
+    }
+
+    .btn-submit:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Ripple on click */
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, .15);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .4s var(--ease-out);
+    }
+
+    .btn-submit:active::after {
+      transform: scaleX(1);
+    }
+
+    /* ============================================================
+       SUCCESS CARD
+       ============================================================ */
+    .success-card {
+      display: none;
+      text-align: center;
+      padding: var(--sp-8) var(--sp-5);
+      animation: popIn .5s var(--ease-out) both;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto var(--sp-5);
+      background: var(--clr-success-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      color: var(--clr-success);
+      animation: checkDraw .6s .3s var(--ease-out) both;
+    }
+
+    @keyframes checkDraw {
+      from {
+        stroke-dashoffset: 30;
+        opacity: 0;
+      }
+
+      to {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+    }
+
+    .success-card h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--clr-success);
+      margin-bottom: var(--sp-3);
+    }
+
+    .success-card p {
+      color: var(--clr-text-muted);
+      max-width: 420px;
+      margin: 0 auto var(--sp-2);
+      font-size: 0.95rem;
+    }
+
+    .success-card .team-note {
+      font-size: 0.875rem;
+      color: var(--clr-text-muted);
+      margin-top: var(--sp-4);
+      opacity: .8;
+    }
+
+    /* ============================================================
+       PART C: LOADING SPINNER
+       ============================================================ */
+    .btn-spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, .35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ============================================================
+       PART C: ERROR NOTIFICATION TOAST
+       ============================================================ */
+    .error-toast {
+      display: none;
+      grid-column: 1 / -1;
+      background: var(--clr-error-light);
+      border: 1.5px solid var(--clr-error);
+      border-radius: var(--radius-sm);
+      padding: var(--sp-3) var(--sp-4);
+      color: var(--clr-error);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      animation: slideDown .35s var(--ease-out) both;
+    }
+
+    .error-toast.visible {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      text-align: center;
+      padding: var(--sp-5) var(--sp-4);
+      font-size: 0.8rem;
+      color: var(--clr-text-muted);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card {
+        padding: var(--sp-5);
+      }
+
+      .hero {
+        padding: var(--sp-7) var(--sp-4) var(--sp-6);
+      }
+
+      .form-wrapper {
+        padding: 0 var(--sp-3) var(--sp-6);
+      }
+
+      .radio-group {
+        flex-direction: column;
+        gap: var(--sp-2);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-card {
+        padding: var(--sp-4);
+        border-radius: var(--radius-md);
+      }
+
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* ============================================================
+       REDUCED MOTION
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== HERO SECTION ===================== -->
+  <header class="hero" role="banner">
+    <h1>Student Lead Capture Form</h1>
+    <p class="subtitle">Submit your academic details and preferred university information.</p>
+    <p class="description">Complete the form below and our admissions team will contact you.</p>
+  </header>
+
+  <!-- ===================== FORM CARD ===================== -->
+  <main class="form-wrapper">
+    <div class="form-card" id="formCard">
+
+      <!-- ---------- THE FORM ---------- -->
+      <form id="leadForm" novalidate aria-label="Student Lead Capture Form">
+        <div class="form-grid">
+
+          <!-- FIELD 1 — Full Name -->
+          <div class="form-group" id="group-fullName">
+            <label for="fullName">Full Name <span class="required-star" aria-hidden="true">*</span></label>
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required minlength="3"
+              autocomplete="name" aria-required="true" aria-describedby="error-fullName" />
+            <span class="error-message" id="error-fullName" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- FIELD 2 — Email -->
+          <div class="form-group" id="group-email">
+            <label for="email">Email Address <span class="required-star" aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" placeholder="Enter your email address" required
+              autocomplete="email" aria-required="true" aria-describedby="error-email" />
+            <span class="error-message" id="error-email" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- FIELD 3 — Country (populated via JS) -->
+          <div class="form-group" id="group-country">
+            <label for="country">Country <span class="required-star" aria-hidden="true">*</span></label>
+            <select id="country" name="country" required aria-required="true" aria-describedby="error-country">
+              <option value="" disabled selected>Select Country</option>
+            </select>
+            <span class="error-message" id="error-country" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- FIELD 4 — Course Level -->
+          <div class="form-group" id="group-courseLevel">
+            <label>Course Level <span class="required-star" aria-hidden="true">*</span></label>
+            <div class="radio-group" role="radiogroup" aria-label="Course Level" aria-describedby="error-courseLevel">
+              <div class="radio-option">
+                <input type="radio" id="courseUG" name="courseLevel" value="UG" />
+                <label for="courseUG" class="radio-label"><span class="radio-dot"></span>UG</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="coursePG" name="courseLevel" value="PG" />
+                <label for="coursePG" class="radio-label"><span class="radio-dot"></span>PG</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="coursePhD" name="courseLevel" value="PhD" />
+                <label for="coursePhD" class="radio-label"><span class="radio-dot"></span>PhD</label>
+              </div>
+            </div>
+            <span class="error-message" id="error-courseLevel" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- FIELD 5 — Preferred University -->
+          <div class="form-group" id="group-preferredUniversity">
+            <label for="preferredUniversity">Preferred University <span class="required-star"
+                aria-hidden="true">*</span></label>
+            <input type="text" id="preferredUniversity" name="preferredUniversity"
+              placeholder="Enter preferred university" required minlength="3" aria-required="true"
+              aria-describedby="error-preferredUniversity" />
+            <span class="error-message" id="error-preferredUniversity" role="alert" aria-live="polite"></span>
+          </div>
+
+          <!-- FIELD 6 — Message (full width) -->
+          <div class="form-group full-width" id="group-message">
+            <label for="message">Message <span class="required-star" aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" placeholder="Tell us about your academic goals..." required
+              maxlength="300" aria-required="true" aria-describedby="error-message charCounter"></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="error-message" id="error-message" role="alert" aria-live="polite"></span>
+              <span class="char-counter" id="charCounter" aria-live="polite">0 / 300 characters</span>
+            </div>
+          </div>
+
+          <!-- PART C: ERROR TOAST -->
+          <div class="error-toast" id="errorToast" role="alert" aria-live="assertive"></div>
+
+          <!-- SUBMIT -->
+          <button type="submit" class="btn-submit" id="btnSubmit">Submit Inquiry</button>
+        </div>
+      </form>
+
+      <!-- ---------- SUCCESS STATE ---------- -->
+      <div class="success-card" id="successCard" role="status" aria-live="assertive">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" style="stroke-dasharray:30;">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2>Thank You!</h2>
+        <p>Your student inquiry has been submitted successfully.</p>
+        <p class="team-note">Our admissions team will contact you shortly.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    &copy; 2026 Student Admissions Portal. All rights reserved.
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT — Pure Vanilla, No Frameworks
+       ============================================================ -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* -------------------------------------------------------
+         1. POPULATE COUNTRY DROPDOWN DYNAMICALLY
+         ------------------------------------------------------- */
+      const countries = [
+        'Australia',
+        'Canada',
+        'China',
+        'France',
+        'Germany',
+        'India',
+        'Japan',
+        'New Zealand',
+        'Singapore',
+        'UAE',
+        'United Kingdom',
+        'United States'
+      ];
+
+      const countrySelect = document.getElementById('country');
+
+      countries.forEach(function (name) {
+        var opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        countrySelect.appendChild(opt);
+      });
+
+      /* -------------------------------------------------------
+         2. UTILITY: DOM SELECTORS
+         ------------------------------------------------------- */
+      var form = document.getElementById('leadForm');
+      var formCard = document.getElementById('formCard');
+      var successCard = document.getElementById('successCard');
+      var btnSubmit = document.getElementById('btnSubmit');
+
+      var fullNameInput = document.getElementById('fullName');
+      var emailInput = document.getElementById('email');
+      var universityInput = document.getElementById('preferredUniversity');
+      var messageInput = document.getElementById('message');
+      var charCounter = document.getElementById('charCounter');
+
+      /* -------------------------------------------------------
+         3. VALIDATION HELPERS
+         ------------------------------------------------------- */
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      /**
+       * Show inline error for a given field group.
+       * @param {string} groupId  — e.g. 'group-fullName'
+       * @param {string} errorId  — e.g. 'error-fullName'
+       * @param {string} message  — human-readable error text
+       * @returns {boolean}       — always false (invalid)
+       */
+      function showError(groupId, errorId, message) {
+        var group = document.getElementById(groupId);
+        var span = document.getElementById(errorId);
+        group.classList.add('has-error');
+        span.textContent = message;
+        return false;
+      }
+
+      /**
+       * Clear inline error for a given field group.
+       */
+      function clearError(groupId, errorId) {
+        var group = document.getElementById(groupId);
+        var span = document.getElementById(errorId);
+        group.classList.remove('has-error');
+        span.textContent = '';
+      }
+
+      /* -------------------------------------------------------
+         4. INDIVIDUAL FIELD VALIDATORS
+         ------------------------------------------------------- */
+      function validateFullName() {
+        var val = fullNameInput.value.trim();
+        if (!val) return showError('group-fullName', 'error-fullName', 'Full Name is required');
+        if (val.length < 3) return showError('group-fullName', 'error-fullName', 'Full Name must be at least 3 characters');
+        clearError('group-fullName', 'error-fullName');
+        return true;
+      }
+
+      function validateEmail() {
+        var val = emailInput.value.trim();
+        if (!val) return showError('group-email', 'error-email', 'Email Address is required');
+        if (!emailRegex.test(val)) return showError('group-email', 'error-email', 'Enter a valid email address');
+        clearError('group-email', 'error-email');
+        return true;
+      }
+
+      function validateCountry() {
+        if (!countrySelect.value) return showError('group-country', 'error-country', 'Please select a country');
+        clearError('group-country', 'error-country');
+        return true;
+      }
+
+      function validateCourseLevel() {
+        var checked = document.querySelector('input[name="courseLevel"]:checked');
+        if (!checked) return showError('group-courseLevel', 'error-courseLevel', 'Please select course level');
+        clearError('group-courseLevel', 'error-courseLevel');
+        return true;
+      }
+
+      function validateUniversity() {
+        var val = universityInput.value.trim();
+        if (!val) return showError('group-preferredUniversity', 'error-preferredUniversity', 'Preferred university is required');
+        if (val.length < 3) return showError('group-preferredUniversity', 'error-preferredUniversity', 'Preferred university must be at least 3 characters');
+        clearError('group-preferredUniversity', 'error-preferredUniversity');
+        return true;
+      }
+
+      function validateMessage() {
+        var val = messageInput.value;
+        if (!val.trim()) return showError('group-message', 'error-message', 'Message is required');
+        if (val.length > 300) return showError('group-message', 'error-message', 'Message cannot exceed 300 characters');
+        clearError('group-message', 'error-message');
+        return true;
+      }
+
+      /* -------------------------------------------------------
+         5. LIVE CHARACTER COUNTER
+         ------------------------------------------------------- */
+      messageInput.addEventListener('input', function () {
+        var len = messageInput.value.length;
+
+        /* Prevent typing beyond 300 */
+        if (len > 300) {
+          messageInput.value = messageInput.value.substring(0, 300);
+          len = 300;
+        }
+
+        charCounter.textContent = len + ' / 300 characters';
+
+        if (len >= 300) {
+          charCounter.classList.add('limit-reached');
+        } else {
+          charCounter.classList.remove('limit-reached');
+        }
+
+        /* Clear error on correction */
+        if (len > 0) clearError('group-message', 'error-message');
+      });
+
+      /* -------------------------------------------------------
+         6. REAL-TIME INLINE VALIDATION (on blur / change)
+         ------------------------------------------------------- */
+      fullNameInput.addEventListener('blur', validateFullName);
+      emailInput.addEventListener('blur', validateEmail);
+      countrySelect.addEventListener('change', validateCountry);
+      universityInput.addEventListener('blur', validateUniversity);
+
+      /* Clear errors as user types (immediate feedback) */
+      fullNameInput.addEventListener('input', function () {
+        if (fullNameInput.value.trim().length >= 3) clearError('group-fullName', 'error-fullName');
+      });
+      emailInput.addEventListener('input', function () {
+        if (emailRegex.test(emailInput.value.trim())) clearError('group-email', 'error-email');
+      });
+      universityInput.addEventListener('input', function () {
+        if (universityInput.value.trim().length >= 3) clearError('group-preferredUniversity', 'error-preferredUniversity');
+      });
+
+      /* Radio — clear error on any selection */
+      document.querySelectorAll('input[name="courseLevel"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          clearError('group-courseLevel', 'error-courseLevel');
+        });
+      });
+
+      /* -------------------------------------------------------
+         7. PART C: N8N WEBHOOK CONFIGURATION
+         ------------------------------------------------------- */
+      var WEBHOOK_URL = 'https://n8n.srv1304884.hstgr.cloud/webhook/9b8fa142-ff2e-41b1-8d04-64fbd2e8d76f';
+
+      var errorToast = document.getElementById('errorToast');
+      var defaultBtnText = 'Submit Inquiry';
+
+      /* -------------------------------------------------------
+         8. REUSABLE PART C FUNCTIONS
+         ------------------------------------------------------- */
+
+      /** Validate all fields. Returns true if all pass. */
+      function validateForm() {
+        fullNameInput.value = fullNameInput.value.trim();
+        emailInput.value = emailInput.value.trim();
+        universityInput.value = universityInput.value.trim();
+
+        var results = [
+          { valid: validateFullName(), el: fullNameInput },
+          { valid: validateEmail(), el: emailInput },
+          { valid: validateCountry(), el: countrySelect },
+          { valid: validateCourseLevel(), el: document.getElementById('courseUG') },
+          { valid: validateUniversity(), el: universityInput },
+          { valid: validateMessage(), el: messageInput }
+        ];
+
+        var firstInvalid = null;
+        for (var i = 0; i < results.length; i++) {
+          if (!results[i].valid && !firstInvalid) {
+            firstInvalid = results[i].el;
+          }
+        }
+
+        if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalid.focus({ preventScroll: true });
+          return false;
+        }
+        return true;
+      }
+
+      /** Collect form data into a plain object. */
+      function getFormData() {
+        var courseLevel = document.querySelector('input[name="courseLevel"]:checked');
+        return {
+          fullName: fullNameInput.value,
+          email: emailInput.value,
+          country: countrySelect.value,
+          courseLevel: courseLevel ? courseLevel.value : '',
+          preferredUniversity: universityInput.value,
+          message: messageInput.value.trim()
+        };
+      }
+
+      /** Show loading state on submit button. */
+      function showLoading() {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="btn-spinner"></span>Submitting...';
+        hideError();
+      }
+
+      /** Reset button to default state. */
+      function hideLoading() {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = defaultBtnText;
+      }
+
+      /** Show success: hide form, display success card. */
+      function showSuccess() {
+        btnSubmit.innerHTML = '&#10003; Submitted Successfully';
+        setTimeout(function () {
+          form.style.display = 'none';
+          successCard.style.display = 'block';
+        }, 600);
+      }
+
+      /** Show error toast above the submit button. */
+      function showErrorNotification(msg) {
+        errorToast.textContent = msg;
+        errorToast.classList.add('visible');
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = 'Try Again';
+      }
+
+      /** Hide the error toast. */
+      function hideError() {
+        errorToast.textContent = '';
+        errorToast.classList.remove('visible');
+      }
+
+      /** POST form data to N8N webhook. Returns the Response object. */
+      async function submitToWebhook(formData) {
+        var response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+        return response;
+      }
+
+      /* -------------------------------------------------------
+         9. FORM SUBMISSION HANDLER (async webhook)
+         ------------------------------------------------------- */
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        /* Step 1: Validate */
+        if (!validateForm()) return;
+
+        /* Step 2: Collect data */
+        var formData = getFormData();
+
+        /* Log before sending */
+        console.log('Submitting Data:', formData);
+        console.log('--- Student Lead Submission ---');
+        console.log(JSON.stringify(formData, null, 2));
+
+        /* Step 3: Show loading & send to webhook */
+        showLoading();
+
+        try {
+          var response = await submitToWebhook(formData);
+
+          /* Only show success on HTTP 200 */
+          if (response.status === 200) {
+            console.log('Submission Success — Status 200');
+            showSuccess();
+          } else {
+            console.error('Submission Failed — Status ' + response.status);
+            showErrorNotification('Submission failed (Status: ' + response.status + '). Please try again later.');
+          }
+        } catch (err) {
+          console.error('Submission Failed — Network Error', err);
+          showErrorNotification('Submission failed. Please check your internet connection and try again.');
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
