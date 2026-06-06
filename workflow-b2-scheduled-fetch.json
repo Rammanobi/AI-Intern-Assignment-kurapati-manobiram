@@ -1,0 +1,269 @@
+{
+  "name": "workflow-b2-scheduled-fetch",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "city-input-001",
+              "name": "city",
+              "value": "mumbai",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a587546f-4571-4717-ab02-8410d304eb41",
+      "name": "Set City Name",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        224
+      ],
+      "notes": "CHANGE THIS to any city or country name: London, Tokyo, Paris, New York, Dubai, etc."
+    },
+    {
+      "parameters": {
+        "url": "https://geocoding-api.open-meteo.com/v1/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $json.city }}"
+            },
+            {
+              "name": "count",
+              "value": "1"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c8ffcba0-2cf0-4f57-8aa4-9c3ddb131efc",
+      "name": "Geocode City",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        832,
+        224
+      ],
+      "notes": "Converts city name to latitude and longitude using Open-Meteo Geocoding API. Free, no API key required."
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "915173cc-6ff9-4365-8f59-def6d8c1caec",
+      "name": "Daily 9AM Trigger1",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        384,
+        224
+      ],
+      "notes": "Runs every day at 9:00 AM IST. Timezone is set to Asia/Kolkata in workflow settings."
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "latitude",
+              "value": "={{ $json.results[0].latitude }}"
+            },
+            {
+              "name": "longitude",
+              "value": "={{ $json.results[0].longitude }}"
+            },
+            {
+              "name": "current_weather",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bbc8fd6d-c6ec-4b85-991c-2346aaa3f1a0",
+      "name": "Fetch Weather Data1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1056,
+        224
+      ],
+      "notes": "Fetches real-time weather using dynamic coordinates resolved from city name. Free, no API key required."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pull geocoding result (city, country, coordinates)\nconst geo = $('Geocode City').first().json;\nconst location = geo.results[0];\n\n// Pull current weather from weather API response\nconst weather = $input.first().json.current_weather;\n\n// Merge into a single clean object\nreturn [\n  {\n    json: {\n      city: location.name,\n      country: location.country,\n      latitude: location.latitude,\n      longitude: location.longitude,\n      temperature: weather.temperature,\n      windspeed: weather.windspeed,\n      weathercode: weather.weathercode,\n      observationTime: weather.time\n    }\n  }\n];"
+      },
+      "id": "5e6cad24-1c02-4d04-ad5f-2f81b67173ca",
+      "name": "Transform Weather Data1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        224
+      ],
+      "notes": "Merges city/country from geocoding node with weather fields from weather API into one flat object."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "out-001",
+              "name": "City",
+              "value": "={{ $json.city }}",
+              "type": "string"
+            },
+            {
+              "id": "out-002",
+              "name": "Country",
+              "value": "={{ $json.country }}",
+              "type": "string"
+            },
+            {
+              "id": "out-003",
+              "name": "Latitude",
+              "value": "={{ $json.latitude }}",
+              "type": "number"
+            },
+            {
+              "id": "out-004",
+              "name": "Longitude",
+              "value": "={{ $json.longitude }}",
+              "type": "number"
+            },
+            {
+              "id": "out-005",
+              "name": "Temperature (°C)",
+              "value": "={{ $json.temperature }}",
+              "type": "number"
+            },
+            {
+              "id": "out-006",
+              "name": "Wind Speed (km/h)",
+              "value": "={{ $json.windspeed }}",
+              "type": "number"
+            },
+            {
+              "id": "out-007",
+              "name": "Weather Code",
+              "value": "={{ $json.weathercode }}",
+              "type": "number"
+            },
+            {
+              "id": "out-008",
+              "name": "Observation Time",
+              "value": "={{ $json.observationTime }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "243fc664-a232-4c91-a685-f7212fb6c7b8",
+      "name": "Format Output Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1504,
+        224
+      ],
+      "notes": "Final clean output: City, Country, Latitude, Longitude, Temperature, Wind Speed, Weather Code, Observation Time."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Set City Name": {
+      "main": [
+        [
+          {
+            "node": "Geocode City",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Geocode City": {
+      "main": [
+        [
+          {
+            "node": "Fetch Weather Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily 9AM Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Set City Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Weather Data1": {
+      "main": [
+        [
+          {
+            "node": "Transform Weather Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Weather Data1": {
+      "main": [
+        [
+          {
+            "node": "Format Output Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "feef29c5-c4c2-49f6-a587-1a452a210f8f",
+  "meta": {
+    "instanceId": "eb9e60fbbd7a1e3e8b665dc12c384c567c2910dd41038a7da529af342753a125"
+  },
+  "id": "cG7fsjtR-rzoLW-unTh7j",
+  "tags": []
+}
