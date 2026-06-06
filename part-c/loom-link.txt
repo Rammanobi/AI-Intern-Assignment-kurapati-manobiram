@@ -1,0 +1,12 @@
+Part C — Integration Demo Recording
+
+Loom Link: https://www.loom.com/share/8311f61733554162902a0022b1b468b7
+
+What the recording shows:
+- Student Lead Capture Form loaded in browser
+- Form filled with test data (PG/PhD level)
+- Submit button shows loading spinner during fetch()
+- n8n webhook receives the POST request
+- Gmail notification triggered for PG/PhD lead
+- Success card displayed on HTTP 200 response
+- n8n execution log confirming full workflow run
